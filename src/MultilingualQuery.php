@@ -1,5 +1,5 @@
 <?php
-namespace omgdef\multilingual;
+namespace neverseen\multilingual;
 
 use yii\db\ActiveQuery;
 
