@@ -87,12 +87,12 @@ class MultilingualBehavior extends Behavior
      */
     public $abridge = true;
 
-    private $currentLanguage;
-    private $ownerClassName;
-    private $ownerPrimaryKey;
-    private $langClassShortName;
-    private $ownerClassShortName;
-    private $langAttributes = [];
+    protected $currentLanguage;
+    protected $ownerClassName;
+    protected $ownerPrimaryKey;
+    protected $langClassShortName;
+    protected $ownerClassShortName;
+    protected $langAttributes = [];
 
     /**
      * @var array excluded validators
@@ -345,7 +345,7 @@ class MultilingualBehavior extends Behavior
     /**
      * @param array $translations
      */
-    private function saveTranslations($translations = [])
+    protected function saveTranslations($translations = [])
     {
         /** @var ActiveRecord $owner */
         $owner = $this->owner;
@@ -495,7 +495,7 @@ class MultilingualBehavior extends Behavior
      * @param string $className
      * @return string
      */
-    private function getShortClassName($className)
+    protected function getShortClassName($className)
     {
         return substr($className, strrpos($className, '\\') + 1);
     }
