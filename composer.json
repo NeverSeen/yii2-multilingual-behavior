@@ -16,7 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "omgdef\\multilingual\\": "src"
+            "neverseen\\multilingual\\": "src"
         }
     },
     "require": {
