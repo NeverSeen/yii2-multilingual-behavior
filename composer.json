@@ -1,5 +1,5 @@
 {
-    "name": "omgdef/yii2-multilingual-behavior",
+    "name": "neverseen/yii2-multilingual-behavior",
     "description": "Port of the yii-multilingual-behavior for yii",
     "type": "yii2-extension",
     "keywords": ["yii2", "extension", " yii2-multilingual-behavior", " behavior", " multilingual", " i18"],
@@ -8,6 +8,10 @@
         {
             "name": "OmgDef",
             "email": "omgdef@gmail.com"
+        }
+        {
+            "name": "NeverSeen",
+            "email": "neverseenone@gmail.com"
         }
     ],
     "autoload": {
