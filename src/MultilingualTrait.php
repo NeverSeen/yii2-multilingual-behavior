@@ -2,7 +2,6 @@
 namespace neverseen\multilingual;
 
 use Yii;
-use yii\db\ActiveQuery;
 
 /**
  * Multilingual trait.
@@ -13,7 +12,7 @@ trait MultilingualTrait
     /**
      * @var string the name of the lang field of the translation table. Default to 'language'.
      */
-    public $languageField = 'language';
+    public $languageField = 'iso639';
 
     /**
      * Scope for querying by languages
@@ -45,6 +44,7 @@ trait MultilingualTrait
             unset($this->with['translation']);
         }
         $this->with('translations');
+        
         return $this;
     }
 
