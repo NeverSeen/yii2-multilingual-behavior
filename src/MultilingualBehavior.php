@@ -10,6 +10,8 @@ use yii\db\ActiveRecord;
 use yii\helpers\Inflector;
 use yii\validators\Validator;
 
+use common\models\components\Languages;
+
 class MultilingualBehavior extends Behavior
 {
     /**
@@ -26,6 +28,13 @@ class MultilingualBehavior extends Behavior
      */
     public $languages;
 
+    /**
+     * string the name of the language table
+     * @var string
+     */
+    public $languageTableName = NULL;
+    
+    
     /**
      * @var string the default language.
      * Example: 'en'.
@@ -222,11 +231,16 @@ class MultilingualBehavior extends Behavior
             eval('
             namespace ' . $namespace . ';
             use yii\db\ActiveRecord;
+            use common\models\components\Languages;
             class ' . $this->langClassShortName . ' extends ActiveRecord
             {
                 public static function tableName()
                 {
                     return \'' . $this->tableName . '\';
+                }
+                public function getLanguages()
+                {
+                    return $this->hasOne(Languages::className(), [\'id\' => \'languages_id\']);
                 }
             }');
         }
@@ -247,10 +261,17 @@ class MultilingualBehavior extends Behavior
      * @return ActiveQuery
      */
     public function getTranslation($language = null)
-    {
+    {        
         $language = $language ?: $this->getCurrentLanguage();
-        return $this->owner->hasOne($this->langClassName, [$this->langForeignKey => $this->ownerPrimaryKey])
-            ->where([$this->languageField => $language]);
+        
+        $relation = $this->owner->hasOne($this->langClassName, [$this->langForeignKey => $this->ownerPrimaryKey]);
+        if ($this->languageTableName !== NULL) {
+            $relation->joinWith($this->languageTableName);
+            $fullFieldName = $this->languageTableName.'.'.$this->languageField;
+        } else {
+            $fullFieldName = $this->languageField;
+        }
+        return $relation->where([$fullFieldName => $language]);
     }
 
     /**
@@ -275,8 +296,12 @@ class MultilingualBehavior extends Behavior
             $translations = $this->indexByLanguage($related);
             foreach ($this->languages as $lang) {
                 foreach ($this->attributes as $attribute) {
-                    foreach ($translations as $translation) {
-                        if ($this->getLanguageBaseName($translation->{$this->languageField}) == $lang) {
+                    foreach ($translations as $tln=>$translation) {         
+                        
+                        Yii::trace('GAHG');
+                        Yii::trace(serialize($this->getLanguageBaseName($translation->languages_id)). ' - ' .$lang);
+                        
+                        if ($this->getLanguageBaseName($tln) == $lang) {
                             $attributeName = $this->localizedPrefix . $attribute;
                             $this->setLangAttribute($this->getAttributeName($attribute, $lang), $translation->{$attributeName});
 
@@ -356,7 +381,7 @@ class MultilingualBehavior extends Behavior
             if (!isset($translations[$lang])) {
                 /** @var ActiveRecord $translation */
                 $translation = new $this->langClassName;
-                $translation->{$this->languageField} = $lang;
+                $translation->languages_id = array_search($lang, $owner->languages);
                 $translation->{$this->langForeignKey} = $owner->getPrimaryKey();
             } else {
                 $translation = $translations[$lang];
@@ -474,9 +499,10 @@ class MultilingualBehavior extends Behavior
      */
     protected function indexByLanguage($records)
     {
-        $sorted = array();
+        $sorted = array();        
         foreach ($records as $record) {
-            $sorted[$record->{$this->languageField}] = $record;
+            $language = Languages::find()->where(['id'=>$record->languages_id])->one()->{$this->languageField};
+            $sorted[$language] = $record;
         }
         unset($records);
         return $sorted;
@@ -490,7 +516,7 @@ class MultilingualBehavior extends Behavior
     {
         return $this->abridge ? substr($language, 0, 2) : $language;
     }
-
+    
     /**
      * @param string $className
      * @return string
