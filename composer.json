@@ -19,6 +19,9 @@
             "neverseen\\multilingual\\": "src"
         }
     },
+    "extra": {
+        "bootstrap": "neverseen\\multilingual\\MultilingualBootstrap"
+    },
     "require": {
         "yiisoft/yii2": "*"
     },
