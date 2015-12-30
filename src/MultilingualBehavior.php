@@ -15,7 +15,7 @@ use common\models\components\Languages;
 class MultilingualBehavior extends Behavior
 {
     /**
-     * Multilingual attributes
+     * Multilingual attributesa
      * @var array
      */
     public $attributes;
@@ -117,7 +117,7 @@ class MultilingualBehavior extends Behavior
             ActiveRecord::EVENT_AFTER_FIND => 'afterFind',
             ActiveRecord::EVENT_AFTER_UPDATE => 'afterUpdate',
             ActiveRecord::EVENT_AFTER_INSERT => 'afterInsert',
-            ActiveRecord::EVENT_AFTER_DELETE => 'afterDelete',
+            ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
             ActiveRecord::EVENT_BEFORE_VALIDATE => 'beforeValidate',
         ];
     }
@@ -356,9 +356,9 @@ class MultilingualBehavior extends Behavior
     }
 
     /**
-     * Handle 'afterDelete' event of the owner.
+     * Handle 'beforeDelete' event of the owner.
      */
-    public function afterDelete()
+    public function beforeDelete()
     {
         if ($this->forceDelete) {
             /** @var ActiveRecord $owner */
