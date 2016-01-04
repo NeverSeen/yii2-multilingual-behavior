@@ -296,10 +296,7 @@ class MultilingualBehavior extends Behavior
             $translations = $this->indexByLanguage($related);
             foreach ($this->languages as $lang) {
                 foreach ($this->attributes as $attribute) {
-                    foreach ($translations as $tln=>$translation) {         
-                        
-                        Yii::trace('GAHG');
-                        Yii::trace(serialize($this->getLanguageBaseName($translation->languages_id)). ' - ' .$lang);
+                    foreach ($translations as $tln=>$translation) {
                         
                         if ($this->getLanguageBaseName($tln) == $lang) {
                             $attributeName = $this->localizedPrefix . $attribute;
