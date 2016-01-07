@@ -14,14 +14,8 @@ class MultilingualQuery extends ActiveQuery
     }
     
     public function all($db = null){
-        
-        static $result = [];
-        static $q = null;
-    	if (empty($result) || ($q!==$db)) {
-            $this->joinWith('translation');
-            $result = parent::all($db);
-            $q = $db;
-        }
-        return $result;
+
+        $this->joinWith('translation');
+        return  parent::all($db);
     }
 }
