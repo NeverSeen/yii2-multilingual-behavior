@@ -1,7 +1,9 @@
 <?php
 namespace neverseen\multilingual;
 
+use Yii;
 use yii\db\ActiveQuery;
+use common\models\components\Languages;
 
 class MultilingualQuery extends ActiveQuery
 {
@@ -14,8 +16,8 @@ class MultilingualQuery extends ActiveQuery
     }
     
     public function all($db = null){
-
+        
         $this->joinWith('translation');
-        return  parent::all($db);
+        return parent::all($db);
     }
 }
