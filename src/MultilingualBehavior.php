@@ -102,7 +102,7 @@ class MultilingualBehavior extends Behavior
     protected $langClassShortName;
     protected $ownerClassShortName;
     protected $langAttributes = [];
-
+    
     /**
      * @var array excluded validators
      */
@@ -129,7 +129,7 @@ class MultilingualBehavior extends Behavior
     {
         /** @var ActiveRecord $owner */
         parent::attach($owner);
-
+        
         if (empty($this->languages) || !is_array($this->languages)) {
             throw new InvalidConfigException('Please specify array of available languages for the ' . get_class($this) . ' in the '
                 . get_class($this->owner) . ' or in the application parameters', 101);
@@ -285,6 +285,14 @@ class MultilingualBehavior extends Behavior
     }
 
     /**
+     * Gets all related records of the current language
+     */
+    public function getRelatedRecordsByLanguage(){
+        $result = $this->owner->getRelatedRecords()['translations'];    
+        return $result;
+    }
+    
+    /**
      * Handle 'afterFind' event of the owner.
      */
     public function afterFind()
@@ -292,7 +300,7 @@ class MultilingualBehavior extends Behavior
         /** @var ActiveRecord $owner */
         $owner = $this->owner;
 
-        if ($owner->isRelationPopulated('translations') && $related = $owner->getRelatedRecords()['translations']) {
+        if ($owner->isRelationPopulated('translations') && $related = $this->getRelatedRecordsByLanguage()) {
             $translations = $this->indexByLanguage($related);
             foreach ($this->languages as $lang) {
                 foreach ($this->attributes as $attribute) {
@@ -498,7 +506,7 @@ class MultilingualBehavior extends Behavior
     {
         $sorted = array();        
         foreach ($records as $record) {
-            $language = Languages::find()->where(['id'=>$record->languages_id])->one()->{$this->languageField};
+            $language = Languages::getById($record->languages_id)->{$this->languageField};
             $sorted[$language] = $record;
         }
         unset($records);
