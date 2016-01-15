@@ -265,13 +265,14 @@ class MultilingualBehavior extends Behavior
         $language = $language ?: $this->getCurrentLanguage();
         
         $relation = $this->owner->hasOne($this->langClassName, [$this->langForeignKey => $this->ownerPrimaryKey]);
+	
         if ($this->languageTableName !== NULL) {
             $relation->joinWith($this->languageTableName);
             $fullFieldName = $this->languageTableName.'.'.$this->languageField;
         } else {
             $fullFieldName = $this->languageField;
         }
-        return $relation->where([$fullFieldName => $language]);
+        return $relation->andWhere([$fullFieldName => $language]);
     }
 
     /**
