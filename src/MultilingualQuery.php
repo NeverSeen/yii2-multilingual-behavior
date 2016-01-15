@@ -15,9 +15,14 @@ class MultilingualQuery extends ActiveQuery
         return parent::count($q, $db);
     }
     
-    public function all($db = null){
+    /*public function all($db = null){
         
         $this->joinWith('translation');
         return parent::all($db);
+    }*/
+    
+    public function jwt(){
+        
+        return $this->joinWith('translation');
     }
 }
