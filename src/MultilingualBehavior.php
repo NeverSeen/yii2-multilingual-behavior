@@ -397,6 +397,10 @@ class MultilingualBehavior extends Behavior
             foreach ($this->attributes as $attribute) {
                 $value = $defaultLanguage ? $owner->$attribute : $this->getLangAttribute($this->getAttributeName($attribute, $lang));
 
+		if (trim($value) == ''){
+		    $value = $owner->$attribute;
+		}
+	
                 if ($value !== null) {
                     $field = $this->localizedPrefix . $attribute;
                     $translation->$field = $value;
